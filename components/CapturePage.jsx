@@ -58,15 +58,10 @@ function Countdown() {
   return <div className="countdown">{box(d, "dias")}{box(h, "horas")}{box(m, "min")}{box(s, "seg")}</div>;
 }
 
-function gcal() {
-  const f = (iso) => iso.replace(/[-:]/g, "").replace(/\.\d{3}/, "");
-  return `https://calendar.google.com/calendar/render?${new URLSearchParams({ action: "TEMPLATE", text: "Ultra Black Lucrativa · Live com a Karen", dates: `${f(EVENT.startISO)}/${f(EVENT.endISO)}`, details: "Live Ultra Black Lucrativa às 20h (horário de Brasília)." })}`;
-}
-
 export default function CapturePage() {
-  const [form, setForm] = useState({ nome: "", email: "", whatsapp: "", website: "" });
+  const [form, setForm] = useState({ nome: "", whatsapp: "", website: "" });
   const [utm, setUtm] = useState({});
-  const [status, setStatus] = useState("idle"); // idle | sending | done
+  const [status, setStatus] = useState("idle"); // idle | sending
   const [error, setError] = useState("");
   const [touched, setTouched] = useState({});
   const nameRef = useRef(null);
@@ -83,7 +78,6 @@ export default function CapturePage() {
     window.addEventListener("keydown", onKey);
     return () => { document.body.style.overflow = prev; clearTimeout(t); window.removeEventListener("keydown", onKey); };
   }, [modalOpen]);
-  const waGroup = process.env.NEXT_PUBLIC_WHATSAPP_GROUP_URL;
 
   useEffect(() => {
     const p = new URLSearchParams(window.location.search);
@@ -94,14 +88,13 @@ export default function CapturePage() {
 
   const errs = {
     nome: form.nome.trim().length < 2 ? "Digite seu nome" : "",
-    email: !/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(form.email.trim()) ? "Digite um e-mail válido" : "",
     whatsapp: form.whatsapp.replace(/\D/g, "").length < 10 ? "WhatsApp com DDD" : "",
   };
-  const valid = !errs.nome && !errs.email && !errs.whatsapp;
+  const valid = !errs.nome && !errs.whatsapp;
 
   const submit = async (e) => {
     e.preventDefault();
-    setTouched({ nome: true, email: true, whatsapp: true });
+    setTouched({ nome: true, whatsapp: true });
     if (!valid || status === "sending") return;
     setStatus("sending");
     setError("");
@@ -109,9 +102,8 @@ export default function CapturePage() {
       const res = await fetch("/api/inscricao", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ...form, ...utm }) });
       const json = await res.json().catch(() => ({}));
       if (!res.ok || !json.ok) throw new Error(json.error || "Não deu certo agora. Tenta de novo.");
-      setStatus("done");
-      setModalOpen(false);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      const q = new URLSearchParams({ nome: form.nome.trim(), whatsapp: form.whatsapp.replace(/\D/g, ""), ...utm });
+      window.location.assign(`/obrigado?${q}`);
     } catch (err) {
       setError(err.message);
       setStatus("idle");
@@ -119,8 +111,6 @@ export default function CapturePage() {
   };
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: k === "whatsapp" ? maskPhone(e.target.value) : e.target.value }));
-  const first = form.nome.trim().split(/\s+/)[0];
-  const checkinHref = `/checkin?${new URLSearchParams({ nome: form.nome.trim(), email: form.email.trim(), whatsapp: form.whatsapp.replace(/\D/g, ""), ...utm })}`;
   const fade = (i) => ({ initial: { opacity: 0, y: 24 }, animate: { opacity: 1, y: 0 }, transition: { delay: 0.1 + i * 0.08, duration: 0.8, ease } });
 
   return (
@@ -134,7 +124,7 @@ export default function CapturePage() {
 
           <div className="hero-copy">
             <AnimatePresence mode="wait">
-              {status !== "done" ? (
+              {true ? (
                 <motion.div key="form" exit={{ opacity: 0, y: -20, filter: "blur(6px)" }} transition={{ duration: 0.4 }}>
                   <motion.div className="eyebrow" {...fade(0)}>{COPY.eyebrow}</motion.div>
                   <motion.h1 className="hero-title serif" {...fade(1)}>
@@ -153,32 +143,7 @@ export default function CapturePage() {
                     </button>
                   </motion.div>
                 </motion.div>
-              ) : (
-                <motion.div key="done" className="capture-done" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease }}>
-                  <motion.div className="seal small" initial={{ scale: 0, rotate: -90 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: "spring", stiffness: 180, damping: 14, delay: 0.15 }}>
-                    <Check width={30} height={30} />
-                  </motion.div>
-                  <div className="eyebrow">Inscrição confirmada</div>
-                  <h1 className="serif" style={{ fontSize: "clamp(40px,5.4vw,64px)", fontWeight: 500, lineHeight: 1.05, margin: "14px 0 16px" }}>
-                    Parabéns{first ? `, ${first}` : ""}! <span className="gold-text">Sua vaga tá garantida.</span>
-                  </h1>
-                  <p className="capture-sub">Acabei de mandar um e-mail pra <b style={{ color: "var(--gold-1)" }}>{form.email.trim()}</b> com todos os detalhes. Se não aparecer em alguns minutos, olha a caixa de spam ou promoções.</p>
-                  <div className="next-steps">
-                    {waGroup && (
-                      <a className="next" href={waGroup} target="_blank" rel="noreferrer">
-                        <b>1</b><div><strong>Entra no grupo do WhatsApp</strong><span>É lá que o link da live chega.</span></div><Arrow />
-                      </a>
-                    )}
-                    <a className="next highlight" href={checkinHref}>
-                      <b>{waGroup ? 2 : 1}</b><div><strong>Faz seu check-in (5 min)</strong><span>Me conta onde você tá hoje pra eu preparar a live pra você.</span></div><Arrow />
-                    </a>
-                    <a className="next" href={gcal()} target="_blank" rel="noreferrer">
-                      <b>{waGroup ? 3 : 2}</b><div><strong>Salva na agenda</strong><span>{EVENT.dateLabel}, horário de Brasília.</span></div><Arrow />
-                    </a>
-                  </div>
-                  <p className="sign serif" style={{ fontStyle: "italic", fontSize: 22, color: "var(--gold-1)", marginTop: 26 }}>Karen &lt;3</p>
-                </motion.div>
-              )}
+              ) : null}
             </AnimatePresence>
           </div>
         </section>
@@ -211,11 +176,6 @@ export default function CapturePage() {
                   <input id="whatsapp" type="tel" inputMode="tel" placeholder=" " autoComplete="tel-national" value={form.whatsapp} onChange={set("whatsapp")} onBlur={() => setTouched((t) => ({ ...t, whatsapp: true }))} className={touched.whatsapp && errs.whatsapp ? "bad" : ""} />
                   <label htmlFor="whatsapp">WhatsApp com DDD</label>
                   {touched.whatsapp && errs.whatsapp && <small>{errs.whatsapp}</small>}
-                </div>
-                <div className="field">
-                  <input id="email" type="email" inputMode="email" placeholder=" " autoComplete="email" value={form.email} onChange={set("email")} onBlur={() => setTouched((t) => ({ ...t, email: true }))} className={touched.email && errs.email ? "bad" : ""} />
-                  <label htmlFor="email">Seu melhor e-mail</label>
-                  {touched.email && errs.email && <small>{errs.email}</small>}
                 </div>
                 <input className="hp" tabIndex={-1} autoComplete="off" value={form.website} onChange={set("website")} aria-hidden />
                 <button className="btn-gold full" disabled={status === "sending"}>

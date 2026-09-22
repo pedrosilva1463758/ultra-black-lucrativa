@@ -35,10 +35,14 @@ async function brevo(path, body) {
 
 async function upsertContact({ nome, email, phone }) {
   const listId = Number(process.env.BREVO_LIST_ID);
-  const base = { email, updateEnabled: true, ...(listId ? { listIds: [listId] } : {}) };
+  const base = { ...(email ? { email } : {}), updateEnabled: true, ...(listId ? { listIds: [listId] } : {}) };
   const first = nome.split(/\s+/)[0];
   const lastName = nome.split(/\s+/).slice(1).join(" ");
   // tenta com telefone; se o Brevo recusar o formato/duplicidade, salva sem
+  if (!email) {
+    if (!phone) return { ok: false, error: "sem email/telefone" };
+    return brevo("/contacts", { ...base, attributes: { FIRSTNAME: first, LASTNAME: lastName, SMS: phone, WHATSAPP: phone } });
+  }
   if (phone) {
     const r = await brevo("/contacts", { ...base, attributes: { FIRSTNAME: first, LASTNAME: lastName, SMS: phone, WHATSAPP: phone } });
     if (r.ok) return r;
@@ -54,12 +58,12 @@ export async function POST(req) {
   if (body.website) return NextResponse.json({ ok: true });
 
   const nome = clip(body.nome, 120);
-  const email = clip(body.email, 200)?.toLowerCase();
+  const email = clip(body.email, 200)?.toLowerCase() || null;
   const whatsappDigits = (body.whatsapp || "").replace(/\D/g, "").slice(0, 15) || null;
 
   if (!nome || nome.length < 2) return NextResponse.json({ ok: false, error: "Digite seu nome." }, { status: 422 });
-  if (!email || !EMAIL_RE.test(email)) return NextResponse.json({ ok: false, error: "Esse e-mail não parece válido." }, { status: 422 });
-  if (whatsappDigits && whatsappDigits.length < 10) return NextResponse.json({ ok: false, error: "Confere o número do WhatsApp com DDD." }, { status: 422 });
+  if (email && !EMAIL_RE.test(email)) return NextResponse.json({ ok: false, error: "Esse e-mail não parece válido." }, { status: 422 });
+  if (!whatsappDigits || whatsappDigits.length < 10) return NextResponse.json({ ok: false, error: "Confere o número do WhatsApp com DDD." }, { status: 422 });
 
   const { data, error } = await supabase.rpc("ubf_register_lead", {
     p_nome: nome,
@@ -77,7 +81,12 @@ export async function POST(req) {
   }
   const { lead_id, is_new, should_send } = data[0];
 
-  let emailStatus = "pulado (já enviado na última hora)";
+  let emailStatus = email ? "pulado (já enviado na última hora)" : "sem e-mail";
+  // sem e-mail: só registra o contato (telefone) na lista do Brevo, se configurado
+  if (!email && process.env.BREVO_API_KEY) {
+    const c = await upsertContact({ nome, email: null, phone: toE164BR(whatsappDigits) });
+    if (!c.ok) console.error("[inscricao] brevo contato (whatsapp)", c);
+  }
   if (should_send) {
     if (!process.env.BREVO_API_KEY) {
       emailStatus = "erro: BREVO_API_KEY não configurada";
