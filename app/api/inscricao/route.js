@@ -83,7 +83,8 @@ export async function POST(req) {
       emailStatus = "erro: BREVO_API_KEY não configurada";
       console.warn("[inscricao] BREVO_API_KEY vazia — lead salvo, e-mail NÃO enviado");
     } else {
-      const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || new URL(req.url).origin).replace(/\/$/, "");
+      const envSite = process.env.NEXT_PUBLIC_SITE_URL || "";
+      const siteUrl = (envSite && !envSite.includes("localhost") ? envSite : new URL(req.url).origin).replace(/\/$/, "");
       const mail = congratsEmail({
         nome,
         email,
