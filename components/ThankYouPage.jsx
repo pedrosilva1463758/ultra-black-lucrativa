@@ -3,80 +3,89 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { EVENT } from "@/lib/questions";
-import { Arrow, Calendar, Check } from "./Icons";
 
 const ease = [0.22, 1, 0.36, 1];
-const fmt = (iso) => iso.replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+const REDIRECT_SECONDS = 5;
 
-function gcal() {
-  return `https://calendar.google.com/calendar/render?${new URLSearchParams({ action: "TEMPLATE", text: "Ultra Black Lucrativa · Live com a Karen", dates: `${fmt(EVENT.startISO)}/${fmt(EVENT.endISO)}`, details: "Live Ultra Black Lucrativa às 20h (horário de Brasília)." })}`;
-}
-function ics() {
-  const body = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//UltraBlack//PT", "BEGIN:VEVENT", `UID:ultra-black-${fmt(EVENT.startISO)}`, `DTSTAMP:${fmt(EVENT.startISO)}`, `DTSTART:${fmt(EVENT.startISO)}`, `DTEND:${fmt(EVENT.endISO)}`, "SUMMARY:Ultra Black Lucrativa · Live com a Karen", "BEGIN:VALARM", "TRIGGER:-PT30M", "ACTION:DISPLAY", "DESCRIPTION:A live começa em 30 minutos!", "END:VALARM", "END:VEVENT", "END:VCALENDAR"].join("\r\n");
-  return "data:text/calendar;charset=utf-8," + encodeURIComponent(body);
-}
+// Link do grupo: variável NEXT_PUBLIC_WHATSAPP_GROUP_URL na Vercel
+const WA_GROUP = process.env.NEXT_PUBLIC_WHATSAPP_GROUP_URL || "";
 
-function Confetti() {
-  const [bits, setBits] = useState([]);
-  useEffect(() => {
-    const c = ["#fbe39a", "#e9b24f", "#c47f2c", "#fff4d0"];
-    setBits(Array.from({ length: 80 }, (_, i) => ({ id: i, left: Math.random() * 100, delay: Math.random() * 0.8, dur: 2.4 + Math.random() * 2.2, color: c[i % 4], rot: Math.random() * 360 })));
-  }, []);
-  return <div className="confetti" aria-hidden>{bits.map((b) => <i key={b.id} style={{ left: `${b.left}%`, background: b.color, animationDelay: `${b.delay}s`, animationDuration: `${b.dur}s`, transform: `rotate(${b.rot}deg)` }} />)}</div>;
+function WhatsIcon() {
+  return (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm5.8 14.13c-.24.68-1.42 1.3-1.95 1.35-.5.05-.97.23-3.27-.68-2.77-1.09-4.52-3.92-4.66-4.1-.13-.18-1.11-1.48-1.11-2.82 0-1.34.7-2 .95-2.28.25-.27.54-.34.72-.34h.52c.17 0 .39-.06.6.46.23.54.77 1.87.84 2 .07.14.11.3.02.48-.09.18-.14.3-.27.46-.14.16-.29.36-.41.48-.14.14-.28.28-.12.56.16.27.71 1.17 1.52 1.9 1.05.93 1.93 1.22 2.2 1.36.27.13.43.11.59-.07.16-.18.68-.79.86-1.07.18-.27.36-.23.61-.14.25.09 1.57.74 1.84.88.27.13.45.2.52.31.07.11.07.66-.17 1.33z" />
+    </svg>
+  );
 }
 
 export default function ThankYouPage() {
   const params = useSearchParams();
-  const nome = (params.get("nome") || "").trim();
-  const first = nome.split(/\s+/)[0];
-  const waGroup = process.env.NEXT_PUBLIC_WHATSAPP_GROUP_URL;
+  const [left, setLeft] = useState(REDIRECT_SECONDS);
+  const [progress, setProgress] = useState(0);
+
   const pass = new URLSearchParams();
-  ["nome", "whatsapp", "email", "utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"].forEach((k) => { if (params.get(k)) pass.set(k, params.get(k)); });
+  ["nome", "whatsapp", "utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"].forEach((k) => { if (params.get(k)) pass.set(k, params.get(k)); });
   const checkinHref = `/checkin?${pass}`;
-  let n = 0;
+
+  useEffect(() => {
+    const t = setTimeout(() => setProgress(90), 250);
+    return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    if (!WA_GROUP) return;
+    if (left <= 0) { window.location.href = WA_GROUP; return; }
+    const t = setTimeout(() => setLeft((s) => s - 1), 1000);
+    return () => clearTimeout(t);
+  }, [left]);
 
   return (
-    <>
-      <Confetti />
-      <div className="grain" aria-hidden />
-      <main className="landing">
-        <section className="hero capture">
-          <motion.div className="hero-media hero-bg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.4, ease }}>
-            <img src="/img/hero-bg.jpg" srcSet="/img/hero-bg-sm.jpg 1000w, /img/hero-bg.jpg 2560w" sizes="100vw" alt="" />
+    <main className="ty">
+      <motion.div className="ty-alert" initial={{ y: -80 }} animate={{ y: 0 }} transition={{ duration: 0.6, ease }}>
+        <span className="ty-alert-hi">Espere!</span> Sua inscrição ainda não está totalmente concluída.
+      </motion.div>
+
+      <section className="ty-body">
+        <motion.div className="ty-progress" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6, ease }}>
+          <motion.div className="ty-progress-fill" initial={{ width: "8%" }} animate={{ width: `${progress}%` }} transition={{ duration: 1.6, ease }}>
+            <span>{progress}%</span>
           </motion.div>
-          <div className="hero-copy">
-            <motion.div className="capture-done" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease }}>
-              <motion.div className="seal small" initial={{ scale: 0, rotate: -90 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: "spring", stiffness: 180, damping: 14, delay: 0.15 }}>
-                <Check width={30} height={30} />
-              </motion.div>
-              <div className="eyebrow">Inscrição confirmada</div>
-              <h1 className="serif" style={{ fontSize: "clamp(40px,5.4vw,64px)", fontWeight: 500, lineHeight: 1.05, margin: "14px 0 16px" }}>
-                Parabéns{first ? `, ${first}` : ""}! <span className="gold-text">Sua vaga tá garantida.</span>
-              </h1>
-              <div className="date-chip"><Calendar /> {EVENT.dateLabel} · ao vivo e online</div>
-              <p className="capture-sub">Agora faz esses passos rapidinhos pra não perder nada da live:</p>
-              <div className="next-steps">
-                {waGroup && (
-                  <a className="next highlight" href={waGroup} target="_blank" rel="noreferrer">
-                    <b>{++n}</b><div><strong>Entra no grupo do WhatsApp</strong><span>É lá que o link da live chega.</span></div><Arrow />
-                  </a>
-                )}
-                <a className={`next ${waGroup ? "" : "highlight"}`} href={checkinHref}>
-                  <b>{++n}</b><div><strong>Faz seu check-in (5 min)</strong><span>Me conta onde você tá hoje pra eu preparar a live pra você.</span></div><Arrow />
-                </a>
-                <a className="next" href={gcal()} target="_blank" rel="noreferrer">
-                  <b>{++n}</b><div><strong>Salva no Google Agenda</strong><span>{EVENT.dateLabel}, horário de Brasília.</span></div><Arrow />
-                </a>
-                <a className="next" href={ics()} download="ultra-black-lucrativa.ics">
-                  <b>{++n}</b><div><strong>Salva no iPhone / Outlook</strong><span>Com lembrete 30 minutos antes.</span></div><Arrow />
-                </a>
-              </div>
-              <p className="serif" style={{ fontStyle: "italic", fontSize: 22, color: "var(--gold-1)", marginTop: 26 }}>Karen &lt;3</p>
-            </motion.div>
-          </div>
-        </section>
-      </main>
-    </>
+        </motion.div>
+
+        <motion.div className="ty-kicker serif" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35, duration: 0.7, ease }}>
+          <i /> Falta apenas <i />
+        </motion.div>
+        <motion.h1 className="ty-title serif gold-text" initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.45, duration: 0.8, ease }}>
+          um passo!
+        </motion.h1>
+
+        <motion.p className="ty-text" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6, duration: 0.7 }}>
+          {WA_GROUP ? (
+            <>Clique no <b>botão abaixo</b> e entre no grupo do WhatsApp. É por lá que eu mando o <span>link da live</span> e todos os avisos da Ultra Black.</>
+          ) : (
+            <>Clique no <b>botão abaixo</b> e faça seu <span>check-in</span>. São perguntas rapidinhas pra eu preparar a live do jeito que faz sentido pra você.</>
+          )}
+        </motion.p>
+
+        {WA_GROUP ? (
+          <>
+            <p className="ty-redirect">{left > 0 ? `Redirecionando em ${left}...` : "Abrindo o WhatsApp..."}</p>
+            <motion.a className="ty-wa" href={WA_GROUP} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.75, duration: 0.6, ease }}>
+              <WhatsIcon /> Entrar no grupo do WhatsApp
+            </motion.a>
+          </>
+        ) : (
+          <motion.a className="btn-gold" style={{ marginTop: 34 }} href={checkinHref} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.75, duration: 0.6, ease }}>
+            Fazer meu check-in (5 min) →
+          </motion.a>
+        )}
+
+        {WA_GROUP && (
+          <motion.a className="ty-secondary" href={checkinHref} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}>
+            Depois, faça seu check-in da live (5 min) →
+          </motion.a>
+        )}
+      </section>
+    </main>
   );
 }

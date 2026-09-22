@@ -378,3 +378,39 @@ tbody tr:hover { background: rgba(233,178,79,.05); }
   .modal-title { font-size: 26px; }
   .btn-gold.cta-big { width: 100%; justify-content: center; }
 }
+
+/* ---------- Página de obrigado ---------- */
+.ty { min-height: 100dvh; display: flex; flex-direction: column; background: linear-gradient(180deg, #000 0%, #0d0a05 45%, #2a2010 100%); position: relative; z-index: 2; }
+.ty-alert {
+  background: #b9443a; color: #fff; text-align: center; font-weight: 600; letter-spacing: -0.01em;
+  font-size: clamp(17px, 2.4vw, 34px); padding: clamp(14px, 2vw, 26px) 16px; line-height: 1.25;
+}
+.ty-alert-hi { color: #f7d64a; }
+.ty-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px 20px 64px; max-width: 760px; margin: 0 auto; width: 100%; }
+.ty-progress { width: 100%; max-width: 550px; height: 44px; border-radius: 999px; background: #f1f1f1; padding: 4px; box-shadow: inset 0 2px 6px rgba(0,0,0,.18); }
+.ty-progress-fill {
+  height: 100%; border-radius: 999px; display: flex; align-items: center; justify-content: flex-end; padding-right: 18px; min-width: 70px;
+  background: linear-gradient(90deg, #fbeec0 0%, #d9b45c 55%, #b8893a 100%); position: relative; overflow: hidden;
+}
+.ty-progress-fill::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.55) 50%, transparent 70%); transform: translateX(-100%); animation: tyShine 2.2s ease-in-out infinite; }
+@keyframes tyShine { to { transform: translateX(100%); } }
+.ty-progress-fill span { font-weight: 700; font-size: 20px; color: #6b5220; position: relative; z-index: 1; }
+.ty-kicker { display: flex; align-items: center; gap: 12px; margin-top: 44px; font-size: clamp(38px, 5.4vw, 64px); color: #fff; line-height: 1; }
+.ty-kicker i { display: block; width: clamp(40px, 8vw, 90px); height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.6)); }
+.ty-kicker i:last-child { transform: scaleX(-1); }
+.ty-title { white-space: nowrap; font-size: clamp(64px, 11vw, 120px); font-weight: 700; line-height: 1; margin: 6px 0 22px; letter-spacing: -0.03em; padding-bottom: 8px; }
+.ty-text { font-size: clamp(17px, 1.9vw, 22px); line-height: 1.6; color: #eee; max-width: 540px; }
+.ty-text b { color: #fff; }
+.ty-text span { color: var(--gold-1); font-weight: 600; }
+.ty-redirect { margin-top: 34px; font-size: 18px; color: #eee; }
+.ty-warn { color: #ffb3a6; }
+.ty-wa {
+  margin-top: 18px; display: inline-flex; align-items: center; gap: 12px; padding: 20px 36px; border-radius: 999px;
+  background: linear-gradient(180deg, #3f9a3a, #2c6f2a); color: #fff; font-weight: 700; font-size: clamp(18px, 2vw, 24px); text-decoration: none;
+  box-shadow: 0 14px 40px -12px rgba(63,154,58,.7); animation: tyPulse 1.8s ease-in-out infinite;
+}
+.ty-wa:hover { filter: brightness(1.08); }
+@keyframes tyPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.035); } }
+.ty-secondary { margin-top: 36px; color: var(--muted); font-size: 14px; text-decoration: none; border-bottom: 1px dashed rgba(255,255,255,.2); }
+.ty-secondary:hover { color: var(--gold-1); }
+@media (max-width: 560px) { .ty-wa { width: 100%; justify-content: center; padding: 18px 16px; font-size: 17px; white-space: nowrap; } }
