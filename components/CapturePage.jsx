@@ -70,6 +70,19 @@ export default function CapturePage() {
   const [error, setError] = useState("");
   const [touched, setTouched] = useState({});
   const nameRef = useRef(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const openModal = () => { setError(""); setModalOpen(true); };
+  const closeModal = () => { if (status !== "sending") setModalOpen(false); };
+
+  useEffect(() => {
+    if (!modalOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const t = setTimeout(() => nameRef.current?.focus(), 250);
+    const onKey = (e) => { if (e.key === "Escape") setModalOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => { document.body.style.overflow = prev; clearTimeout(t); window.removeEventListener("keydown", onKey); };
+  }, [modalOpen]);
   const waGroup = process.env.NEXT_PUBLIC_WHATSAPP_GROUP_URL;
 
   useEffect(() => {
@@ -97,6 +110,7 @@ export default function CapturePage() {
       const json = await res.json().catch(() => ({}));
       if (!res.ok || !json.ok) throw new Error(json.error || "Não deu certo agora. Tenta de novo.");
       setStatus("done");
+      setModalOpen(false);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err) {
       setError(err.message);
@@ -133,31 +147,11 @@ export default function CapturePage() {
                     {COPY.bullets.map((b) => <li key={b}><span><Check /></span>{b}</li>)}
                   </motion.ul>
 
-                  <motion.form className="capture-card" onSubmit={submit} noValidate {...fade(5)}>
-                    <div className="field">
-                      <input ref={nameRef} id="nome" placeholder=" " autoComplete="name" value={form.nome} onChange={set("nome")} onBlur={() => setTouched((t) => ({ ...t, nome: true }))} className={touched.nome && errs.nome ? "bad" : ""} />
-                      <label htmlFor="nome">Seu primeiro nome</label>
-                      {touched.nome && errs.nome && <small>{errs.nome}</small>}
-                    </div>
-                    <div className="field">
-                      <input id="email" type="email" inputMode="email" placeholder=" " autoComplete="email" value={form.email} onChange={set("email")} onBlur={() => setTouched((t) => ({ ...t, email: true }))} className={touched.email && errs.email ? "bad" : ""} />
-                      <label htmlFor="email">Seu melhor e-mail</label>
-                      {touched.email && errs.email && <small>{errs.email}</small>}
-                    </div>
-                    <div className="field">
-                      <input id="whatsapp" type="tel" inputMode="tel" placeholder=" " autoComplete="tel-national" value={form.whatsapp} onChange={set("whatsapp")} onBlur={() => setTouched((t) => ({ ...t, whatsapp: true }))} className={touched.whatsapp && errs.whatsapp ? "bad" : ""} />
-                      <label htmlFor="whatsapp">WhatsApp com DDD</label>
-                      {touched.whatsapp && errs.whatsapp && <small>{errs.whatsapp}</small>}
-                    </div>
-                    <input className="hp" tabIndex={-1} autoComplete="off" value={form.website} onChange={set("website")} aria-hidden />
-                    <button className="btn-gold full" disabled={status === "sending"}>
-                      {status === "sending" ? <><span className="spinner" /> Garantindo sua vaga…</> : <>{COPY.cta} <Arrow /></>}
+                  <motion.div className="cta-row" {...fade(5)}>
+                    <button type="button" className="btn-gold cta-big" onClick={openModal}>
+                      {COPY.cta} <Arrow />
                     </button>
-                    {error && <p className="error-msg">{error}</p>}
-                    <p className="legal"><Lock /> Seus dados estão seguros. Ao se inscrever, você aceita receber e-mails e mensagens sobre o evento.</p>
-                  </motion.form>
-
-                  <motion.div {...fade(6)}><Countdown /></motion.div>
+                  </motion.div>
                 </motion.div>
               ) : (
                 <motion.div key="done" className="capture-done" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease }}>
@@ -186,10 +180,53 @@ export default function CapturePage() {
                 </motion.div>
               )}
             </AnimatePresence>
-            <div className="meta-row" style={{ marginTop: 22 }}><span><Clock /> Ao vivo · {EVENT.dateLabel}</span></div>
           </div>
         </section>
       </main>
+        <AnimatePresence>
+          {modalOpen && (
+            <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onMouseDown={(e) => { if (e.target === e.currentTarget) closeModal(); }}>
+              <motion.form
+                className="modal-card"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="modal-title"
+                onSubmit={submit}
+                noValidate
+                initial={{ opacity: 0, y: 40, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 30, scale: 0.97 }}
+                transition={{ duration: 0.45, ease }}
+              >
+                <button type="button" className="modal-close" onClick={closeModal} aria-label="Fechar">×</button>
+                <div className="eyebrow">Vaga gratuita</div>
+                <h2 id="modal-title" className="serif modal-title">Garanta sua vaga na <span className="gold-text">Ultra Black</span></h2>
+                <p className="modal-sub"><Calendar /> {EVENT.dateLabel} · ao vivo e online</p>
+                <div className="field">
+                  <input ref={nameRef} id="nome" placeholder=" " autoComplete="given-name" value={form.nome} onChange={set("nome")} onBlur={() => setTouched((t) => ({ ...t, nome: true }))} className={touched.nome && errs.nome ? "bad" : ""} />
+                  <label htmlFor="nome">Seu primeiro nome</label>
+                  {touched.nome && errs.nome && <small>{errs.nome}</small>}
+                </div>
+                <div className="field">
+                  <input id="whatsapp" type="tel" inputMode="tel" placeholder=" " autoComplete="tel-national" value={form.whatsapp} onChange={set("whatsapp")} onBlur={() => setTouched((t) => ({ ...t, whatsapp: true }))} className={touched.whatsapp && errs.whatsapp ? "bad" : ""} />
+                  <label htmlFor="whatsapp">WhatsApp com DDD</label>
+                  {touched.whatsapp && errs.whatsapp && <small>{errs.whatsapp}</small>}
+                </div>
+                <div className="field">
+                  <input id="email" type="email" inputMode="email" placeholder=" " autoComplete="email" value={form.email} onChange={set("email")} onBlur={() => setTouched((t) => ({ ...t, email: true }))} className={touched.email && errs.email ? "bad" : ""} />
+                  <label htmlFor="email">Seu melhor e-mail</label>
+                  {touched.email && errs.email && <small>{errs.email}</small>}
+                </div>
+                <input className="hp" tabIndex={-1} autoComplete="off" value={form.website} onChange={set("website")} aria-hidden />
+                <button className="btn-gold full" disabled={status === "sending"}>
+                  {status === "sending" ? <><span className="spinner" /> Garantindo sua vaga…</> : <>Confirmar minha vaga <Arrow /></>}
+                </button>
+                {error && <p className="error-msg">{error}</p>}
+                <p className="legal"><Lock /> Seus dados estão seguros. Ao se inscrever, você aceita receber mensagens sobre o evento.</p>
+              </motion.form>
+            </motion.div>
+          )}
+        </AnimatePresence>
     </>
   );
 }
