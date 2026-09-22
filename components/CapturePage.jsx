@@ -114,8 +114,8 @@ export default function CapturePage() {
       <Ambient />
       <main className="landing">
         <section className="hero capture">
-          <motion.div className="hero-media" initial={{ opacity: 0, scale: 1.06 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.6, ease }}>
-            <img src="/img/hero-mobile.jpg" alt="Karen com cofre dourado e ampulheta" />
+          <motion.div className="hero-media hero-bg" initial={{ opacity: 0, scale: 1.04 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.6, ease }}>
+            <img src="/img/hero-bg.jpg" srcSet="/img/hero-bg-sm.jpg 1000w, /img/hero-bg.jpg 2560w" sizes="100vw" alt="Karen com cofre dourado e ampulheta" fetchPriority="high" />
           </motion.div>
 
           <div className="hero-copy">

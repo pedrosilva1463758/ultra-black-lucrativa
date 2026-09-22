@@ -337,3 +337,17 @@ tbody tr:hover { background: rgba(233,178,79,.05); }
   .hero.capture .hero-copy { padding-top: 38vh; }
   .capture-card { padding: 16px; }
 }
+
+/* Fundo da primeira dobra (captura) */
+.hero.capture .hero-media.hero-bg { inset: 0 0 auto 0; height: max(100vh, 640px); }
+.hero.capture .hero-media.hero-bg img { object-position: 75% 25%; }
+.hero.capture .hero-media.hero-bg::after {
+  background:
+    linear-gradient(90deg, rgba(5,5,5,.92) 0%, rgba(5,5,5,.75) 30%, rgba(5,5,5,.15) 55%, rgba(5,5,5,0) 70%),
+    linear-gradient(0deg, var(--bg) 0%, rgba(5,5,5,0) 22%);
+}
+@media (max-width: 900px) {
+  .hero.capture .hero-media.hero-bg { inset: 0 0 auto 0; height: 64vh; }
+  .hero.capture .hero-media.hero-bg img { object-position: 78% 25%; }
+  .hero.capture .hero-media.hero-bg::after { background: linear-gradient(0deg, var(--bg) 3%, rgba(5,5,5,.25) 45%, rgba(5,5,5,.35) 100%); }
+}
