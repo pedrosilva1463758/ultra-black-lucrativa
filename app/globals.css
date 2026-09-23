@@ -408,8 +408,8 @@ tbody tr:hover { background: rgba(233,178,79,.05); }
 .ty-warn { color: #ffb3a6; }
 .ty-wa {
   margin-top: 18px; display: inline-flex; align-items: center; gap: 12px; padding: 20px 36px; border-radius: 999px;
-  background: linear-gradient(180deg, #3f9a3a, #2c6f2a); color: #fff; font-weight: 700; font-size: clamp(18px, 2vw, 24px); text-decoration: none;
-  box-shadow: 0 14px 40px -12px rgba(63,154,58,.7); animation: tyPulse 1.8s ease-in-out infinite;
+  background: linear-gradient(135deg, #5be584 0%, #25d366 45%, #128c3e 100%); color: #fff; font-weight: 700; font-size: clamp(18px, 2vw, 24px); text-decoration: none;
+  box-shadow: 0 16px 44px -10px rgba(37,211,102,.75), 0 0 0 6px rgba(37,211,102,.12), inset 0 1px 0 rgba(255,255,255,.35); animation: tyPulse 1.8s ease-in-out infinite;
 }
 .ty-wa:hover { filter: brightness(1.08); }
 @keyframes tyPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.035); } }

@@ -60,31 +60,13 @@ export default function ThankYouPage() {
         </motion.h1>
 
         <motion.p className="ty-text" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6, duration: 0.7 }}>
-          {WA_GROUP ? (
-            <>Clique no <b>botão abaixo</b> e entre no grupo do WhatsApp. É por lá que eu mando o <span>link da live</span> e todos os avisos da Ultra Black.</>
-          ) : (
-            <>Clique no <b>botão abaixo</b> e faça seu <span>check-in</span>. São perguntas rapidinhas pra eu preparar a live do jeito que faz sentido pra você.</>
-          )}
+          Clique no <b>botão abaixo</b> e entre no <span>grupo VIP</span>. É por lá que eu mando o link da live e todos os avisos da Ultra Black.
         </motion.p>
 
-        {WA_GROUP ? (
-          <>
-            <p className="ty-redirect">{left > 0 ? `Redirecionando em ${left}...` : "Abrindo o WhatsApp..."}</p>
-            <motion.a className="ty-wa" href={WA_GROUP} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.75, duration: 0.6, ease }}>
-              <WhatsIcon /> Entrar no grupo do WhatsApp
-            </motion.a>
-          </>
-        ) : (
-          <motion.a className="btn-gold" style={{ marginTop: 34 }} href={checkinHref} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.75, duration: 0.6, ease }}>
-            Fazer meu check-in (5 min) →
-          </motion.a>
-        )}
-
-        {WA_GROUP && (
-          <motion.a className="ty-secondary" href={checkinHref} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}>
-            Depois, faça seu check-in da live (5 min) →
-          </motion.a>
-        )}
+        {WA_GROUP && <p className="ty-redirect">{left > 0 ? `Redirecionando em ${left}...` : "Abrindo o WhatsApp..."}</p>}
+        <motion.a className="ty-wa" style={WA_GROUP ? undefined : { marginTop: 34 }} href={WA_GROUP || checkinHref} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.75, duration: 0.6, ease }}>
+          <WhatsIcon /> Entrar no grupo VIP
+        </motion.a>
       </section>
     </main>
   );
