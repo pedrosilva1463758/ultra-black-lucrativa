@@ -245,8 +245,7 @@ export default function CapturePage() {
                 transition={{ duration: 0.45, ease }}
               >
                 <button type="button" className="modal-close" onClick={closeModal} aria-label="Fechar">×</button>
-                <div className="eyebrow">Vaga gratuita</div>
-                <h2 id="modal-title" className="serif modal-title">Garanta sua vaga na <span className="gold-text">Ultra Black</span></h2>
+                <h2 id="modal-title" className="serif modal-title">Garanta sua vaga na <span className="gold-text">Ultra Black Lucrativa</span></h2>
                 <p className="modal-sub"><Calendar /> {EVENT.dateLabel} · ao vivo e online</p>
                 <div className="field">
                   <input ref={nameRef} id="nome" placeholder=" " autoComplete="given-name" value={form.nome} onChange={set("nome")} onBlur={() => setTouched((t) => ({ ...t, nome: true }))} className={touched.nome && errs.nome ? "bad" : ""} />
@@ -263,7 +262,7 @@ export default function CapturePage() {
                   {status === "sending" ? <><span className="spinner" /> Garantindo sua vaga…</> : <>Confirmar minha vaga <Arrow /></>}
                 </button>
                 {error && <p className="error-msg">{error}</p>}
-                <p className="legal"><Lock /> Seus dados estão seguros. Ao se inscrever, você aceita receber mensagens sobre o evento.</p>
+                <p className="legal modal-legal"><Lock /> Seus dados estão seguros. Ao se inscrever, você aceita receber mensagens sobre o evento.</p>
               </motion.form>
             </motion.div>
           )}

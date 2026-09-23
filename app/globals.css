@@ -523,3 +523,10 @@ html, body { overflow-x: clip; }
   .modal-backdrop { place-items: center; padding: 16px; }
   .modal-card { border-radius: 24px; max-width: 460px; padding: 26px 18px 20px; }
 }
+
+/* Popup: textos centralizados */
+.modal-title { text-align: center; margin-top: 10px; padding: 0 16px; }
+.modal-sub { justify-content: center; text-align: center; }
+.legal.modal-legal { justify-content: center; align-items: center; text-align: center; }
+.legal.modal-legal { display: block; }
+.legal.modal-legal svg { display: inline-block; vertical-align: -2px; margin-right: 6px; }
