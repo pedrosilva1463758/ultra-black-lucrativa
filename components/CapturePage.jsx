@@ -129,16 +129,12 @@ export default function CapturePage() {
             <AnimatePresence mode="wait">
               {true ? (
                 <motion.div key="form" exit={{ opacity: 0, y: -20, filter: "blur(6px)" }} transition={{ duration: 0.4 }}>
-                  <motion.div className="eyebrow" {...fade(0)}>{COPY.eyebrow}</motion.div>
                   <motion.h1 className="hero-title serif" {...fade(1)}>
                     <span>Ultra Black</span>
                     <span className="gold-text">Lucrativa</span>
                   </motion.h1>
                   <motion.div className="date-chip" {...fade(2)}><Calendar /> {EVENT.dateLabel} · online</motion.div>
                   <motion.p className="capture-sub" {...fade(3)}>{COPY.sub}</motion.p>
-                  <motion.ul className="bullets" {...fade(4)}>
-                    {COPY.bullets.map((b) => <li key={b}><span><Check /></span>{b}</li>)}
-                  </motion.ul>
 
                   <motion.div className="cta-row" {...fade(5)}>
                     <button type="button" className="btn-gold cta-big" onClick={openModal}>
