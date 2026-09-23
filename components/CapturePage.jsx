@@ -19,8 +19,8 @@ const COPY = {
 
 
 const PILARES = [
-  { n: "1º Pilar", t1: "A Janela", t2: "de Ouro", img: null, icon: "🛍️", text: "Entender por que entre a Black e a virada do ano quem começa do zero tem mais chance do que em qualquer outro mês." },
-  { n: "2º Pilar", t1: "Achadinhos que", t2: "vendem sozinhos", img: null, icon: "🏷️", text: "Saber escolher o produto que o povo já tá caçando, sem ter estoque e sem gastar um real com mercadoria." },
+  { n: "1º Pilar", t1: "A Janela", t2: "de Ouro", img: "/img/pilar1.webp", text: "Entender por que entre a Black e a virada do ano quem começa do zero tem mais chance do que em qualquer outro mês." },
+  { n: "2º Pilar", t1: "Achadinhos que", t2: "vendem sozinhos", img: "/img/pilar2.webp", text: "Saber escolher o produto que o povo já tá caçando, sem ter estoque e sem gastar um real com mercadoria." },
   { n: "3º Pilar", t1: "TikTok Shop", t2: "sem aparecer", img: "/img/pilar3.webp", text: "Gravar vídeo de mão e de produto que leva a pessoa direto pro teu link, sem mostrar o rosto em nenhum momento." },
   { n: "4º Pilar", t1: "Shopee e", t2: "cortes virais", img: "/img/pilar4.webp", text: "Usar corte de conteúdo que já viralizou pra puxar gente pro teu link na Shopee, todo dia." },
   { n: "5º Pilar", t1: "Mão na massa", t2: "com a Karen", img: "/img/pilar5.webp", text: "Não ficar sozinho na parte difícil: a Karen acompanha de perto até a primeira venda." },
