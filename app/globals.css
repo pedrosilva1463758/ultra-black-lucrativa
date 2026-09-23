@@ -504,3 +504,22 @@ tbody tr:hover { background: rgba(233,178,79,.05); }
   .pillar { flex-basis: 100%; min-width: 0; max-width: 420px; }
   .sec3-cta .btn-gold { width: 100%; justify-content: center; }
 }
+
+/* ---------- Quarta dobra (ao vivo) ---------- */
+.sec4 { grid-template-columns: 1fr 1fr; }
+.sec4-media img { width: 100%; max-width: 640px; margin-left: 0;
+  -webkit-mask-image: radial-gradient(ellipse 72% 70% at 50% 45%, #000 60%, transparent 100%); mask-image: radial-gradient(ellipse 72% 70% at 50% 45%, #000 60%, transparent 100%); }
+@media (max-width: 900px) {
+  .sec4 { grid-template-columns: 1fr; }
+  .sec4 .sec2-copy { order: 2; margin-top: -40px; }
+  .sec4 .sec4-media { order: 1; }
+  .sec4-media img { width: 100%; max-width: 520px; margin: 0 auto; }
+}
+
+html, body { overflow-x: clip; }
+.sec4 { overflow: hidden; }
+/* Popup centralizado também no celular */
+@media (max-width: 560px) {
+  .modal-backdrop { place-items: center; padding: 16px; }
+  .modal-card { border-radius: 24px; max-width: 460px; padding: 26px 18px 20px; }
+}

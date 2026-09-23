@@ -203,6 +203,31 @@ export default function CapturePage() {
             <button type="button" className="btn-gold cta-big" onClick={openModal}>{COPY.cta} <Arrow /></button>
           </motion.div>
         </section>
+        <div className="marquee" aria-label="Ultra Black Lucrativa · Karen Talissa · 08/10 às 20h">
+          <div className="marquee-track" aria-hidden>
+            {Array.from({ length: 2 }).map((_, k) => (
+              <span key={k}>
+                {Array.from({ length: 6 }).map((__, i) => (
+                  <span key={i}>Ultra Black Lucrativa · Karen Talissa · 08/10 às 20h · </span>
+                ))}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <section className="sec2 sec4">
+          <motion.div className="sec2-copy" initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.9, ease }}>
+            <h2 className="sec2-title">Exclusivo pra <span className="gold-text">quem estiver ao vivo</span></h2>
+            <p>A maior oferta que o mercado já viu...</p>
+            <p>"Pra quem estiver presente na live, vai ter uma ultra-oferta exclusiva da Ultra Black Lucrativa, a menor condição que já fiz, além de ter a oportunidade de participar de um sorteio de um IPAD lacrado!</p>
+            <p>E os primeiros a entrar ainda levam bônus que não voltam em nenhum outro momento"</p>
+            <p>Se tu tá cansada de toda Black ser só mais uma fatura, teu lugar é nessa live.</p>
+            <button type="button" className="btn-gold cta-big" onClick={openModal}>Quero fazer minha pré-inscrição! <Arrow /></button>
+          </motion.div>
+          <motion.div className="sec2-media sec4-media" initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.9, ease, delay: 0.1 }}>
+            <img src="/img/secao4.webp" alt="Karen ao vivo" loading="lazy" />
+          </motion.div>
+        </section>
       </main>
         <AnimatePresence>
           {modalOpen && (
