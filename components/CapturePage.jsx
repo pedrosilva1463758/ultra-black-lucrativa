@@ -147,6 +147,19 @@ export default function CapturePage() {
             </AnimatePresence>
           </div>
         </section>
+
+        <section className="sec2">
+          <motion.div className="sec2-media" initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.9, ease }}>
+            <img src="/img/secao2.webp" srcSet="/img/secao2-sm.webp 820w, /img/secao2.webp 1230w" sizes="(max-width: 900px) 92vw, 46vw" alt="Karen mostrando vendas aprovadas no celular" loading="lazy" />
+          </motion.div>
+          <motion.div className="sec2-copy" initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.9, ease, delay: 0.1 }}>
+            <h2 className="sec2-title">A estratégia que me <span className="gold-text">faz faturar R$ 100k todos os meses</span> para você copiar e colar.</h2>
+            <p>Todo ano o Brasil inteiro enche o carrinho entre a Black Friday e o Réveillon.</p>
+            <p>E todo ano eu fico do outro lado recebendo comissões...</p>
+            <p>Pela primeira vez vou juntar tudo o que faço na época mais <b>LUCRATIVA</b> do ano, pra quem nunca vendeu nada começar da melhor forma possível.</p>
+            <button type="button" className="btn-gold cta-big" onClick={openModal}>{COPY.cta} <Arrow /></button>
+          </motion.div>
+        </section>
       </main>
         <AnimatePresence>
           {modalOpen && (
