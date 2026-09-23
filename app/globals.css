@@ -465,3 +465,17 @@ tbody tr:hover { background: rgba(233,178,79,.05); }
   .sec2-copy { margin-top: -56px; position: relative; z-index: 1; }
   .sec2 { padding-top: 24px; }
 }
+
+/* ---------- Faixa com texto infinito ---------- */
+.marquee {
+  position: relative; z-index: 3; overflow: hidden; white-space: nowrap;
+  background: linear-gradient(90deg, #5a3f1c 0%, #8d6b33 30%, #c9a75a 70%, #f0cf73 100%);
+  border-top: 1px solid rgba(251,227,154,.35); border-bottom: 1px solid rgba(0,0,0,.4);
+  box-shadow: 0 10px 40px -10px rgba(233,178,79,.35);
+}
+.marquee-track { display: inline-flex; animation: marquee 40s linear infinite; padding: 16px 0; }
+.marquee-track > span { display: inline-block; }
+.marquee-track span span { font-weight: 600; font-size: clamp(15px, 1.4vw, 22px); color: #1b1206; letter-spacing: 0.01em; padding-right: 6px; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (max-width: 900px) { .marquee-track { padding: 12px 0; animation-duration: 30s; } }
+@media (prefers-reduced-motion: reduce) { .marquee-track { animation: marquee 80s linear infinite !important; } }

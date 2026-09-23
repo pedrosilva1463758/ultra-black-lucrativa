@@ -146,6 +146,18 @@ export default function CapturePage() {
           </div>
         </section>
 
+
+        <div className="marquee" aria-label="Ultra Black Lucrativa · Karen Talissa · 08/10 às 20h">
+          <div className="marquee-track" aria-hidden>
+            {Array.from({ length: 2 }).map((_, k) => (
+              <span key={k}>
+                {Array.from({ length: 6 }).map((__, i) => (
+                  <span key={i}>Ultra Black Lucrativa · Karen Talissa · 08/10 às 20h · </span>
+                ))}
+              </span>
+            ))}
+          </div>
+        </div>
         <section className="sec2">
           <motion.div className="sec2-media" initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.9, ease }}>
             <img src="/img/secao2.webp" srcSet="/img/secao2-sm.webp 820w, /img/secao2.webp 1230w" sizes="(max-width: 900px) 92vw, 46vw" alt="Karen mostrando vendas aprovadas no celular" loading="lazy" />
