@@ -5,10 +5,10 @@ import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 
 const ease = [0.22, 1, 0.36, 1];
-const REDIRECT_SECONDS = 5;
+const REDIRECT_SECONDS = 3;
 
 // Link do grupo: variável NEXT_PUBLIC_WHATSAPP_GROUP_URL na Vercel
-const WA_GROUP = process.env.NEXT_PUBLIC_WHATSAPP_GROUP_URL || "";
+const WA_GROUP = process.env.NEXT_PUBLIC_WHATSAPP_GROUP_URL || "https://chat.whatsapp.com/KAMiUPdhHZ4H6MraWnhJ2h";
 
 function WhatsIcon() {
   return (
