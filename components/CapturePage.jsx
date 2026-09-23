@@ -8,7 +8,7 @@ import { Arrow, Calendar, Check, Clock, Lock } from "./Icons";
 // ✏️ Textos da página de captura — edite à vontade
 const COPY = {
   eyebrow: "Live gratuita e ao vivo",
-  sub: "A noite em que eu vou te mostrar como aproveitar a Black Friday pra começar a vender pela internet como afiliada — mesmo que você esteja começando do zero.",
+  sub: "No dia 08/10, às 20h, vou abrir ao vivo a estratégia completa pra você sair do lado de quem gasta na Black e passar pro lado de quem recebe comissão de cada compra, até a virada do ano…",
   bullets: [
     "Como escolher produtos que vendem de verdade na Black Friday",
     "Como gravar vídeo de achadinho sem precisar mostrar o rosto",
@@ -129,9 +129,8 @@ export default function CapturePage() {
             <AnimatePresence mode="wait">
               {true ? (
                 <motion.div key="form" exit={{ opacity: 0, y: -20, filter: "blur(6px)" }} transition={{ duration: 0.4 }}>
-                  <motion.h1 className="hero-title serif" {...fade(1)}>
-                    <span>Ultra Black</span>
-                    <span className="gold-text">Lucrativa</span>
+                  <motion.h1 className="hero-title hero-title-long serif" {...fade(1)}>
+                    A nossa Ultra <span className="gold-text">Black Lucrativa</span> começa aqui!
                   </motion.h1>
                   <motion.div className="date-chip" {...fade(2)}><Calendar /> {EVENT.dateLabel} · online</motion.div>
                   <motion.p className="capture-sub" {...fade(3)}>{COPY.sub}</motion.p>
