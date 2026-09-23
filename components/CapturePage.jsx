@@ -17,6 +17,15 @@ const COPY = {
   cta: "Quero garantir minha vaga",
 };
 
+
+const PILARES = [
+  { n: "1º Pilar", t1: "A Janela", t2: "de Ouro", img: null, icon: "🛍️", text: "Entender por que entre a Black e a virada do ano quem começa do zero tem mais chance do que em qualquer outro mês." },
+  { n: "2º Pilar", t1: "Achadinhos que", t2: "vendem sozinhos", img: null, icon: "🏷️", text: "Saber escolher o produto que o povo já tá caçando, sem ter estoque e sem gastar um real com mercadoria." },
+  { n: "3º Pilar", t1: "TikTok Shop", t2: "sem aparecer", img: "/img/pilar3.webp", text: "Gravar vídeo de mão e de produto que leva a pessoa direto pro teu link, sem mostrar o rosto em nenhum momento." },
+  { n: "4º Pilar", t1: "Shopee e", t2: "cortes virais", img: "/img/pilar4.webp", text: "Usar corte de conteúdo que já viralizou pra puxar gente pro teu link na Shopee, todo dia." },
+  { n: "5º Pilar", t1: "Mão na massa", t2: "com a Karen", img: "/img/pilar5.webp", text: "Não ficar sozinho na parte difícil: a Karen acompanha de perto até a primeira venda." },
+];
+
 const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"];
 const ease = [0.22, 1, 0.36, 1];
 
@@ -167,6 +176,30 @@ export default function CapturePage() {
             <p>Todo ano o Brasil inteiro enche o carrinho entre a Black Friday e o Réveillon.</p>
             <p>E todo ano eu fico do outro lado recebendo comissões...</p>
             <p>Pela primeira vez vou juntar tudo o que faço na época mais <b>LUCRATIVA</b> do ano, pra quem nunca vendeu nada começar da melhor forma possível.</p>
+            <button type="button" className="btn-gold cta-big" onClick={openModal}>{COPY.cta} <Arrow /></button>
+          </motion.div>
+        </section>
+
+        <section className="sec3">
+          <motion.h2 className="sec3-title" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.4 }} transition={{ duration: 0.7, ease }}>
+            Os <span className="gold-text">5 pilares</span> da Ultra Black
+          </motion.h2>
+          <div className="pillars">
+            {PILARES.map((p, i) => (
+              <motion.article key={p.n} className="pillar" initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.25 }} transition={{ duration: 0.7, ease, delay: (i % 3) * 0.1 }}>
+                <div className="pillar-img">
+                  {p.img ? <img src={p.img} alt={`${p.t1} ${p.t2}`} loading="lazy" /> : <div className="pillar-ph"><span>{p.icon}</span></div>}
+                </div>
+                <h3>
+                  <span className="pillar-n gold-text">{p.n}</span>
+                  <span className="pillar-t1">{p.t1}</span>
+                  <span className="pillar-t2 gold-text">{p.t2}</span>
+                </h3>
+                <p>{p.text}</p>
+              </motion.article>
+            ))}
+          </div>
+          <motion.div className="sec3-cta" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
             <button type="button" className="btn-gold cta-big" onClick={openModal}>{COPY.cta} <Arrow /></button>
           </motion.div>
         </section>
