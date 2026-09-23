@@ -34,20 +34,20 @@ async function brevo(path, body) {
 }
 
 async function upsertContact({ nome, email, phone }) {
-  const listId = Number(process.env.BREVO_LIST_ID);
+  const listId = Number(process.env.BREVO_LIST_ID || 3); // lista "KAREN 1M"
   const base = { ...(email ? { email } : {}), updateEnabled: true, ...(listId ? { listIds: [listId] } : {}) };
   const first = nome.split(/\s+/)[0];
   const lastName = nome.split(/\s+/).slice(1).join(" ");
   // tenta com telefone; se o Brevo recusar o formato/duplicidade, salva sem
   if (!email) {
     if (!phone) return { ok: false, error: "sem email/telefone" };
-    return brevo("/contacts", { ...base, attributes: { FIRSTNAME: first, LASTNAME: lastName, SMS: phone, WHATSAPP: phone } });
+    return brevo("/contacts", { ...base, attributes: { NOME: first, SOBRENOME: lastName, SMS: phone, WHATSAPP: phone } });
   }
   if (phone) {
-    const r = await brevo("/contacts", { ...base, attributes: { FIRSTNAME: first, LASTNAME: lastName, SMS: phone, WHATSAPP: phone } });
+    const r = await brevo("/contacts", { ...base, attributes: { NOME: first, SOBRENOME: lastName, SMS: phone, WHATSAPP: phone } });
     if (r.ok) return r;
   }
-  return brevo("/contacts", { ...base, attributes: { FIRSTNAME: first, LASTNAME: lastName } });
+  return brevo("/contacts", { ...base, attributes: { NOME: first, SOBRENOME: lastName } });
 }
 
 export async function POST(req) {
@@ -62,7 +62,7 @@ export async function POST(req) {
   const whatsappDigits = (body.whatsapp || "").replace(/\D/g, "").slice(0, 15) || null;
 
   if (!nome || nome.length < 2) return NextResponse.json({ ok: false, error: "Digite seu nome." }, { status: 422 });
-  if (email && !EMAIL_RE.test(email)) return NextResponse.json({ ok: false, error: "Esse e-mail não parece válido." }, { status: 422 });
+  if (!email || !EMAIL_RE.test(email)) return NextResponse.json({ ok: false, error: "Confere o seu e-mail." }, { status: 422 });
   if (!whatsappDigits || whatsappDigits.length < 10) return NextResponse.json({ ok: false, error: "Confere o número do WhatsApp com DDD." }, { status: 422 });
 
   const { data, error } = await supabase.rpc("ubf_register_lead", {
@@ -99,12 +99,12 @@ export async function POST(req) {
         email,
         whatsapp: whatsappDigits,
         siteUrl,
-        whatsappGroupUrl: process.env.NEXT_PUBLIC_WHATSAPP_GROUP_URL || "",
+        whatsappGroupUrl: process.env.NEXT_PUBLIC_WHATSAPP_GROUP_URL || "https://chat.whatsapp.com/KAMiUPdhHZ4H6MraWnhJ2h",
       });
       const [contact, sent] = await Promise.all([
         upsertContact({ nome, email, phone: toE164BR(whatsappDigits) }),
         brevo("/smtp/email", {
-          sender: { name: process.env.BREVO_SENDER_NAME || "Karen", email: process.env.BREVO_SENDER_EMAIL },
+          sender: { name: process.env.BREVO_FROM_NAME || "Karen Talissa", email: process.env.BREVO_FROM_EMAIL || "gerenciadorpedro@gmail.com" },
           to: [{ email, name: nome }],
           subject: mail.subject,
           htmlContent: mail.html,

@@ -68,7 +68,7 @@ function Countdown() {
 }
 
 export default function CapturePage() {
-  const [form, setForm] = useState({ nome: "", whatsapp: "", website: "" });
+  const [form, setForm] = useState({ nome: "", whatsapp: "", email: "", website: "" });
   const [utm, setUtm] = useState({});
   const [status, setStatus] = useState("idle"); // idle | sending
   const [error, setError] = useState("");
@@ -98,12 +98,13 @@ export default function CapturePage() {
   const errs = {
     nome: form.nome.trim().length < 2 ? "Digite seu nome" : "",
     whatsapp: form.whatsapp.replace(/\D/g, "").length < 10 ? "WhatsApp com DDD" : "",
+    email: !/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(form.email.trim()) ? "Digite um e-mail válido" : "",
   };
-  const valid = !errs.nome && !errs.whatsapp;
+  const valid = !errs.nome && !errs.whatsapp && !errs.email;
 
   const submit = async (e) => {
     e.preventDefault();
-    setTouched({ nome: true, whatsapp: true });
+    setTouched({ nome: true, whatsapp: true, email: true });
     if (!valid || status === "sending") return;
     setStatus("sending");
     setError("");
@@ -256,6 +257,11 @@ export default function CapturePage() {
                   <input id="whatsapp" type="tel" inputMode="tel" placeholder=" " autoComplete="tel-national" value={form.whatsapp} onChange={set("whatsapp")} onBlur={() => setTouched((t) => ({ ...t, whatsapp: true }))} className={touched.whatsapp && errs.whatsapp ? "bad" : ""} />
                   <label htmlFor="whatsapp">WhatsApp com DDD</label>
                   {touched.whatsapp && errs.whatsapp && <small>{errs.whatsapp}</small>}
+                </div>
+                <div className="field">
+                  <input id="email" type="email" inputMode="email" placeholder=" " autoComplete="email" value={form.email} onChange={set("email")} onBlur={() => setTouched((t) => ({ ...t, email: true }))} className={touched.email && errs.email ? "bad" : ""} />
+                  <label htmlFor="email">Seu melhor e-mail</label>
+                  {touched.email && errs.email && <small>{errs.email}</small>}
                 </div>
                 <input className="hp" tabIndex={-1} autoComplete="off" value={form.website} onChange={set("website")} aria-hidden />
                 <button className="btn-gold full" disabled={status === "sending"}>
