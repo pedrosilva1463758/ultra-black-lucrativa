@@ -347,9 +347,11 @@ tbody tr:hover { background: rgba(233,178,79,.05); }
     linear-gradient(0deg, var(--bg) 0%, rgba(5,5,5,0) 22%);
 }
 @media (max-width: 900px) {
-  .hero.capture .hero-media.hero-bg { inset: 0 0 auto 0; height: 64vh; }
-  .hero.capture .hero-media.hero-bg img { object-position: 78% 25%; }
-  .hero.capture .hero-media.hero-bg::after { background: linear-gradient(0deg, var(--bg) 3%, rgba(5,5,5,.25) 45%, rgba(5,5,5,.35) 100%); }
+  .hero.capture .hero-media.hero-bg { inset: 0 0 auto 0; height: auto; }
+  .hero.capture .hero-media.hero-bg picture { display: block; }
+  .hero.capture .hero-media.hero-bg img { width: 100%; height: auto; object-fit: initial; display: block; }
+  .hero.capture .hero-media.hero-bg::after { background: linear-gradient(0deg, var(--bg) 2%, rgba(5,5,5,.55) 22%, rgba(5,5,5,0) 45%); }
+  .hero.capture .hero-copy { padding-top: 92vw; }
 }
 
 /* ---------- CTA + popup de inscrição ---------- */
