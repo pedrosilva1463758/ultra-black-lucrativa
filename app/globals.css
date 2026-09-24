@@ -556,3 +556,8 @@ html, body { overflow-x: clip; }
   .prize-copy p { margin-left: auto; margin-right: auto; }
   .prize .btn-gold { width: 100%; justify-content: center; }
 }
+
+/* iPad dentro da seção "Exclusivo pra quem estiver ao vivo" */
+.sec4-ipad { display: block; width: 100%; max-width: 300px; height: auto; margin: 6px 0 20px; filter: drop-shadow(0 20px 36px rgba(0,0,0,.6)) drop-shadow(0 0 40px rgba(233,178,79,.25)); animation: prizeFloat 5s ease-in-out infinite; }
+@keyframes prizeFloat { 0%,100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-10px) rotate(1deg); } }
+@media (max-width: 900px) { .sec4-ipad { max-width: 240px; margin-left: auto; margin-right: auto; } }
