@@ -216,6 +216,17 @@ export default function CapturePage({ redirectTo = "/obrigado" }) {
           </div>
         </div>
 
+        <section className="prize">
+          <motion.div className="prize-copy" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.8, ease }}>
+            <div className="prize-badge">Só para os 100 primeiros</div>
+            <h2 className="sec2-title">Prêmios <span className="gold-text">exclusivos</span> para os 100 primeiros</h2>
+            <p>Os <b>100 primeiros</b> que entrarem na Ultra Black Lucrativa concorrem a prêmios exclusivos, incluindo um <b>iPad lacrado</b>.</p>
+            <button type="button" className="btn-gold cta-big" onClick={openModal}>{COPY.cta} <Arrow /></button>
+          </motion.div>
+          <motion.div className="prize-media" initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.9, ease, delay: 0.1 }}>
+            <img src="/img/ipad.webp" alt="iPad, um dos prêmios" loading="lazy" />
+          </motion.div>
+        </section>
         <section className="sec2 sec4">
           <motion.div className="sec2-copy" initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.9, ease }}>
             <h2 className="sec2-title">Exclusivo pra <span className="gold-text">quem estiver ao vivo</span></h2>
