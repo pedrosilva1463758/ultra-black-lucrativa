@@ -67,7 +67,7 @@ function Countdown() {
   return <div className="countdown">{box(d, "dias")}{box(h, "horas")}{box(m, "min")}{box(s, "seg")}</div>;
 }
 
-export default function CapturePage() {
+export default function CapturePage({ redirectTo = "/obrigado" }) {
   const [form, setForm] = useState({ nome: "", whatsapp: "", email: "", website: "" });
   const [utm, setUtm] = useState({});
   const [status, setStatus] = useState("idle"); // idle | sending
@@ -112,8 +112,8 @@ export default function CapturePage() {
       const res = await fetch("/api/inscricao", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ...form, ...utm }) });
       const json = await res.json().catch(() => ({}));
       if (!res.ok || !json.ok) throw new Error(json.error || "Não deu certo agora. Tenta de novo.");
-      const q = new URLSearchParams({ nome: form.nome.trim(), whatsapp: form.whatsapp.replace(/\D/g, ""), ...utm });
-      window.location.assign(`/obrigado?${q}`);
+      const q = new URLSearchParams({ nome: form.nome.trim(), whatsapp: form.whatsapp.replace(/\D/g, ""), email: form.email.trim(), ...utm });
+      window.location.assign(`${redirectTo}?${q}`);
     } catch (err) {
       setError(err.message);
       setStatus("idle");
