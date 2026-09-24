@@ -109,7 +109,7 @@ export default function CapturePage({ redirectTo = "/obrigado" }) {
     setStatus("sending");
     setError("");
     try {
-      const res = await fetch("/api/inscricao", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ...form, ...utm }) });
+      const res = await fetch("/api/inscricao", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ...form, ...utm, origem: redirectTo === "/checkin" ? "pc" : "home" }) });
       const json = await res.json().catch(() => ({}));
       if (!res.ok || !json.ok) throw new Error(json.error || "Não deu certo agora. Tenta de novo.");
       const q = new URLSearchParams({ nome: form.nome.trim(), whatsapp: form.whatsapp.replace(/\D/g, ""), email: form.email.trim(), ...utm });

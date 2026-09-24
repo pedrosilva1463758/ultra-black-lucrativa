@@ -81,6 +81,13 @@ export async function POST(req) {
   }
   const { lead_id, is_new, should_send } = data[0];
 
+  // dispara o webhook do WhatsApp (URL fica guardada no banco, não no código)
+  const origem = body.origem === "pc" ? "pc" : "home";
+  const whats = supabase.rpc("ubf_fire_whatsapp", { p_lead: lead_id, p_origem: origem }).then(({ data: r, error: e }) => {
+    if (e) console.error("[inscricao] webhook whatsapp", e);
+    else console.log("[inscricao] webhook whatsapp:", r);
+  });
+
   let emailStatus = email ? "pulado (já enviado na última hora)" : "sem e-mail";
   // sem e-mail: só registra o contato (telefone) na lista do Brevo, se configurado
   if (!email && process.env.BREVO_API_KEY) {
@@ -119,5 +126,6 @@ export async function POST(req) {
     await supabase.rpc("ubf_mark_email", { p_lead: lead_id, p_status: emailStatus });
   }
 
+  await whats;
   return NextResponse.json({ ok: true, is_new, email_status: emailStatus.startsWith("erro") ? "falhou" : "ok" });
 }
