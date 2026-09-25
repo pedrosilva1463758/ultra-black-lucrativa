@@ -112,6 +112,8 @@ export default function CapturePage({ redirectTo = "/obrigado" }) {
       const res = await fetch("/api/inscricao", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ...form, ...utm, origem: redirectTo === "/checkin" ? "pc" : "home" }) });
       const json = await res.json().catch(() => ({}));
       if (!res.ok || !json.ok) throw new Error(json.error || "Não deu certo agora. Tenta de novo.");
+      // painel de captação (TripleA): registra o lead antes de sair da página
+      try { window.TripleA?.lead?.({ nome: form.nome.trim(), email: form.email.trim(), telefone: "+55" + form.whatsapp.replace(/\D/g, "") }); } catch {}
       const q = new URLSearchParams({ nome: form.nome.trim(), whatsapp: form.whatsapp.replace(/\D/g, ""), email: form.email.trim(), ...utm });
       window.location.assign(`${redirectTo}?${q}`);
     } catch (err) {
@@ -125,6 +127,8 @@ export default function CapturePage({ redirectTo = "/obrigado" }) {
 
   return (
     <>
+      {/* rastreador do painel de captação (React coloca no <head>) */}
+      <script async src="https://hub.brunoguerra.com.br/api/public/captacao/script" data-projeto="cmugzp0rm0004gm0ak4wgalpr" />
       <Ambient />
       <main className="landing">
         <section className="hero capture">

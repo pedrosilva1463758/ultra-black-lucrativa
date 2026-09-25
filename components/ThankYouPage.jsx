@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 
@@ -22,6 +22,7 @@ export default function ThankYouPage() {
   const params = useSearchParams();
   const [left, setLeft] = useState(REDIRECT_SECONDS);
   const [progress, setProgress] = useState(0);
+  const waRef = useRef(null);
 
   const pass = new URLSearchParams();
   ["nome", "whatsapp", "utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"].forEach((k) => { if (params.get(k)) pass.set(k, params.get(k)); });
@@ -34,13 +35,19 @@ export default function ThankYouPage() {
 
   useEffect(() => {
     if (!WA_GROUP) return;
-    if (left <= 0) { window.location.href = WA_GROUP; return; }
+    if (left <= 0) {
+      // clica no botão (em vez de só trocar a URL) pro painel registrar a entrada no grupo
+      if (waRef.current) waRef.current.click(); else window.location.href = WA_GROUP;
+      return;
+    }
     const t = setTimeout(() => setLeft((s) => s - 1), 1000);
     return () => clearTimeout(t);
   }, [left]);
 
   return (
     <main className="ty">
+      {/* rastreador do painel de captação — página de obrigado */}
+      <script async src="https://hub.brunoguerra.com.br/api/public/captacao/script" data-projeto="cmugzp0rm0004gm0ak4wgalpr" data-pagina="obrigado" />
       <motion.div className="ty-alert" initial={{ y: -80 }} animate={{ y: 0 }} transition={{ duration: 0.6, ease }}>
         <span className="ty-alert-hi">Espere!</span> Sua inscrição ainda não está totalmente concluída.
       </motion.div>
@@ -64,7 +71,7 @@ export default function ThankYouPage() {
         </motion.p>
 
         {WA_GROUP && <p className="ty-redirect">{left > 0 ? `Redirecionando em ${left}...` : "Abrindo o WhatsApp..."}</p>}
-        <motion.a className="ty-wa" style={WA_GROUP ? undefined : { marginTop: 34 }} href={WA_GROUP || checkinHref} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.75, duration: 0.6, ease }}>
+        <motion.a ref={waRef} data-grupo className="ty-wa" style={WA_GROUP ? undefined : { marginTop: 34 }} href={WA_GROUP || checkinHref} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.75, duration: 0.6, ease }}>
           <WhatsIcon /> Entrar no grupo VIP
         </motion.a>
       </section>
